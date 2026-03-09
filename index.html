@@ -461,6 +461,34 @@
                 padding: 3rem 5%;
             }
         }
+
+form{
+display:flex;
+flex-direction:column;
+gap:15px;
+max-width:500px;
+margin:auto;
+margin-top:20px;
+}
+
+input, textarea{
+padding:12px;
+border:none;
+border-radius:8px;
+background:#f3f3f3;
+font-size:16px;
+}
+
+textarea{
+resize:none;
+}
+
+#status{
+margin-top:10px;
+font-weight:bold;
+}
+
+
     </style>
 </head>
 <body>
@@ -590,38 +618,27 @@
     </section>
 
     <!-- Contact Section -->
-    <section class="section-light reveal" id="contact">
-        <h2 class="section-title">Get In Touch</h2>
-        <div class="contact-content">
-            <p style="font-size: 1.1rem; color: #666; margin-bottom: 2rem;">
-                I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
-            </p>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <div class="contact-icon">📧</div>
-                    <div style="text-align: left;">
-                        <strong>Email</strong>
-                        <p style="color: #666; margin-top: 0.3rem;">vinayakmkudlamath@gmail.com</p>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">📱</div>
-                    <div style="text-align: left;">
-                        <strong>Phone</strong>
-                        <p style="color: #666; margin-top: 0.3rem;">+91 9686239368</p>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">📍</div>
-                    <div style="text-align: left;">
-                        <strong>Location</strong>
-                        <p style="color: #666; margin-top: 0.3rem;">Davanagere, Karnataka, India</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+   <section class="section-light reveal" id="contact">
+    <h2 class="section-title">Get In Touch</h2>
 
+    <div class="contact-content">
+
+        <form id="contactForm">
+
+            <input type="text" id="name" placeholder="Your Name" required>
+
+            <input type="email" id="email" placeholder="Your Email" required>
+
+            <textarea id="message" placeholder="Your Message" rows="5" required></textarea>
+
+            <button type="submit" class="btn btn-primary">Send Message</button>
+
+        </form>
+
+        <p id="status"></p>
+
+    </div>
+</section>
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 Vinayak Kudlamath. All rights reserved.</p>
@@ -711,5 +728,43 @@
         window.addEventListener('scroll', reveal);
         reveal(); // Initial check
     </script>
+    <script>
+
+/* existing JS code (particles, typing animation etc.) */
+
+/* CONTACT FORM BACKEND CONNECTION */
+
+const form = document.getElementById("contactForm");
+
+form.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    const response = await fetch("http://localhost:5000/contact", {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({name,email,message})
+    });
+
+    const data = await response.json();
+
+    const status = document.getElementById("status");
+
+    if(data.success){
+        status.innerText = "✅ Message Sent Successfully!";
+        form.reset();
+    }else{
+        status.innerText = "❌ Error sending message.";
+    }
+
+});
+
+</script>
 </body>
 </html>
